@@ -1,7 +1,10 @@
 import { Effect } from "effect";
 
-const program = Effect.sync(() => {
-  console.log("Hello, World!");
-});
+const getElement = (querySelector: Parameters<Element["querySelector"]>[0]) => {
+  const element = document.querySelector(querySelector);
+  return element
+    ? Effect.succeed(element)
+    : Effect.fail(new Error("Element not found"));
+};
 
-Effect.runSync(program);
+Effect.runSync(getElement("#board"));
