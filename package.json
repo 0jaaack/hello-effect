@@ -1,18 +1,21 @@
 {
-  "name": "tic-tac-toe",
+  "name": "hello-effect",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "main": "tsx src/main.ts",
+    "tictactoe": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
   "devDependencies": {
+    "tsx": "^4.20.5",
     "typescript": "^5.5.3",
     "vite": "^5.4.1"
   },
   "dependencies": {
     "effect": "^3.7.3"
-  }
+  },
+  "packageManager": "pnpm@10.14.0"
 }
