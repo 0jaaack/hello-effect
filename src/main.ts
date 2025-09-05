@@ -1,4 +1,14 @@
-import { Data, Effect } from "effect";
+import { Data, Effect, Schema } from "effect";
+
+const PokemonSchema = Schema.Struct({
+  id: Schema.Number,
+  order: Schema.Number,
+  name: Schema.String,
+  height: Schema.Number,
+  weight: Schema.Number,
+});
+
+const DecodePokemon = Schema.decode(PokemonSchema);
 
 class FetchError extends Data.TaggedError("FetchError")<{}> {}
 
@@ -20,13 +30,15 @@ const program = Effect.gen(function* () {
     return yield* new FetchError();
   }
 
-  return yield* jsonResponse(response);
+  const json = yield* jsonResponse(response);
+  return yield* DecodePokemon(json);
 });
 
 const main = program.pipe(
   Effect.catchTags({
     FetchError: () => Effect.succeed("Fetch error"),
     JsonError: () => Effect.succeed("Json error"),
+    ParseError: () => Effect.succeed("Parse error"),
   }),
 );
 
