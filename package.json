@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "main": "tsx src/main.ts",
+    "main": "BASE_URL=https://pokeapi.co tsx src/main.ts",
     "tictactoe": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview"
