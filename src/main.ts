@@ -1,20 +1,10 @@
-import { Config, Data, Effect, Schema } from "effect";
+import { Config, Effect, Schema } from "effect";
+import { Pokemon } from "./schemas";
+import { FetchError, JsonError } from "./errors";
 
 const config = Config.string("BASE_URL");
 
-class Pokemon extends Schema.Class<Pokemon>("Pokemon")({
-  id: Schema.Number,
-  order: Schema.Number,
-  name: Schema.String,
-  height: Schema.Number,
-  weight: Schema.Number,
-}) {}
-
 const DecodePokemon = Schema.decode(Pokemon);
-
-class FetchError extends Data.TaggedError("FetchError")<{}> {}
-
-class JsonError extends Data.TaggedError("JsonError")<{}> {}
 
 const fetchRequest = (baseUrl: string) =>
   Effect.tryPromise({
@@ -27,7 +17,7 @@ const jsonResponse = (response: Response) =>
     catch: (): JsonError => new JsonError(),
   });
 
-const program = Effect.gen(function* () {
+const getPokemon = Effect.gen(function* () {
   const baseUrl = yield* config;
   const response = yield* fetchRequest(baseUrl);
   if (!response.ok) {
@@ -38,7 +28,7 @@ const program = Effect.gen(function* () {
   return yield* DecodePokemon(json);
 });
 
-const main = program.pipe(
+const main = getPokemon.pipe(
   Effect.catchTags({
     FetchError: () => Effect.succeed("Fetch error"),
     JsonError: () => Effect.succeed("Json error"),
